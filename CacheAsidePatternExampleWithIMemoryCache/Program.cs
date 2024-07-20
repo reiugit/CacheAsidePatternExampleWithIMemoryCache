@@ -7,7 +7,7 @@ builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
-app.MapGet("/test-cacheaside/{id}", (int id, [FromServices] IMemoryCache cache) =>
+app.MapGet("/test-cacheaside/{id:int}", (int id, [FromServices] IMemoryCache cache) =>
 {
     bool isCached = true;
 
