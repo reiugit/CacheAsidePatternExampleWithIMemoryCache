@@ -6,19 +6,18 @@ public static class CacheExtensions
 {
     public static (string response, bool wasCached, double ageInSeconds) GetOrCreateWithCacheInfo(this IMemoryCache cache, int id, Func<string> stringFactory)
     {
-        bool wasCached = true;
-
-        var (response, cachedAt) = cache.GetOrCreate(id, entry =>
+        if (cache.TryGetValue(id, out ResponseWithTimestamp? cachedResponseWithTimestamp))
         {
-            wasCached = false;
+            var cachedSinceInSeconds = (DateTimeOffset.UtcNow - cachedResponseWithTimestamp!.CachedAt).TotalSeconds;
 
-            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5);
-            
-            return (stringFactory(), DateTimeOffset.UtcNow);
-        });
+            return (cachedResponseWithTimestamp.Response, true, cachedSinceInSeconds);
+        }
 
-        var cachedSinceInSeconds = (DateTimeOffset.UtcNow - cachedAt).Seconds;
+        var response = stringFactory();
+        var responseWithTimestamp = new ResponseWithTimestamp(response, DateTimeOffset.UtcNow);
 
-        return (response!, wasCached, cachedSinceInSeconds);
+        cache.Set(id, responseWithTimestamp, CacheOptions.AbsoluteExpirationInFiveSeconds);
+
+        return (response, false, 0);
     }
 }
