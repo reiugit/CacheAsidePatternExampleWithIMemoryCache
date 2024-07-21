@@ -4,7 +4,7 @@ namespace CacheAsidePatternExampleWithIMemoryCache;
 
 public static class CacheExtensions
 {
-    public static (string response, bool wasCached, int ageInSeconds) GetOrCreateWithCacheInfo(this IMemoryCache cache, int id, Func<string> stringFactory)
+    public static (string response, bool wasCached, double ageInSeconds) GetOrCreateWithCacheInfo(this IMemoryCache cache, int id, Func<string> stringFactory)
     {
         bool wasCached = true;
 
