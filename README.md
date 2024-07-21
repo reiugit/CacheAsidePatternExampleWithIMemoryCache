@@ -3,6 +3,6 @@
 Topics:
 * Adding MemoryCache to DI Container
 * Injecting IMemoryCache into endpoint
-* Usage of 'GetOrCreate(...)'
-* Alternative: 'TryGetValue(...)'
+* Usage of 'TryGetValue(...)'
+* Alternative: 'GetOrCreate(...)'
 * Expiration/Eviction
