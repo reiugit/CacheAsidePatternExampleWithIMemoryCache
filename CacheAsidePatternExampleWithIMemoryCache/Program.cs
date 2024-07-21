@@ -10,9 +10,7 @@ var app = builder.Build();
 
 app.MapGet("/test-cacheaside/{id:int}", (int id, [FromServices] IMemoryCache cache) =>
 {
-    var (response, wasCached, cachedSinceInSeconds) = cache.GetOrCreateWithCacheInfo(id, () => $"Response for Id {id} ...");
-
-    return new { id, response, wasCached, cachedSinceInSeconds };
+    return cache.GetOrCreateWithCacheInfo(id, factory : () => $"Response for Id {id} ...");
 });
 
 app.Run();
